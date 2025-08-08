@@ -1,267 +1,354 @@
-# Bus Booking System
+# 🚌 Bus Booking System
 
-A complete bus booking system built with Spring Boot backend and React frontend, featuring user authentication, bus search, seat booking, and payment processing.
+A full-stack bus booking application built with Spring Boot (Backend) and React (Frontend).
 
-## Features
+## 🏗️ Architecture
 
-### Backend (Spring Boot)
+- **Backend**: Spring Boot 3.2.0 with Spring Security, JWT, JPA/Hibernate
+- **Frontend**: React 18 with Vite, Tailwind CSS
+- **Database**: MySQL 8.0 (Docker)
+- **Authentication**: JWT-based authentication
 
-- **User Authentication**: JWT-based authentication with login/signup
-- **Bus Management**: CRUD operations for buses and routes
-- **Seat Management**: Real-time seat availability tracking
-- **Booking System**: Complete booking workflow with confirmation
-- **Payment Processing**: Simulated payment processing
-- **Database**: H2 in-memory database with automatic table creation
-- **Security**: Spring Security with JWT tokens
-- **CORS**: Configured for frontend communication
+## 🚀 Quick Setup
 
-### Frontend (React + Vite)
+### Option 1: Automated Setup (Recommended)
 
-- **Modern UI**: Beautiful interface with Tailwind CSS
-- **User Authentication**: Login/register pages with form validation
-- **Bus Search**: Advanced search with filters
-- **Seat Selection**: Interactive seat map with availability
-- **Booking Management**: View and manage bookings
-- **Payment Integration**: Process payments for bookings
-- **Responsive Design**: Works on desktop and mobile
+1. **Prerequisites**:
 
-## Tech Stack
+   - Docker Desktop installed and running
+   - Java 17+ installed
+   - Node.js 16+ installed
+   - Maven 3.6+ installed
 
-### Backend
+2. **Run the setup script**:
 
-- Spring Boot 3.2.0
-- Spring Security
-- Spring Data JPA
-- H2 Database
-- JWT Authentication
-- Maven
+   ```bash
+   ./setup.sh
+   ```
 
-### Frontend
+   This script will:
 
-- React 18
-- Vite
-- React Router DOM
-- Tailwind CSS
-- Lucide React Icons
-- React Hot Toast
+   - Start MySQL database in Docker
+   - Build and start the Spring Boot backend
+   - Install frontend dependencies
+   - Test all endpoints
+   - Display setup information
 
-## Prerequisites
+### Option 2: Manual Setup
 
-- Java 17 or higher
-- Node.js 16 or higher
-- npm or yarn
-
-## Quick Start
-
-### 1. Clone the Repository
+#### 1. Database Setup
 
 ```bash
-git clone <repository-url>
-cd spring-test
+# Start MySQL container
+docker run --name mysql-busbooking \
+  -e MYSQL_ROOT_PASSWORD=Ssuren78626@@ \
+  -e MYSQL_DATABASE=busbookingdb \
+  -p 3306:3306 \
+  -d mysql:8.0
+
+# Wait for MySQL to be ready (30 seconds)
+sleep 30
 ```
 
-### 2. Start the Backend
-
-Navigate to the project root and run:
+#### 2. Backend Setup
 
 ```bash
-# Using Maven wrapper
-./mvnw spring-boot:run
+# Build the project
+mvn clean compile
 
-# Or using Maven directly
+# Start the Spring Boot application
 mvn spring-boot:run
 ```
 
-The Spring Boot application will start on `http://localhost:8080`
+The backend will be available at: http://localhost:8080
 
-### 3. Start the Frontend
-
-Open a new terminal and navigate to the frontend directory:
+#### 3. Frontend Setup
 
 ```bash
+# Navigate to frontend directory
 cd frontend
+
+# Install dependencies
 npm install
+
+# Start development server
 npm run dev
 ```
 
-The React application will start on `http://localhost:5173`
+The frontend will be available at: http://localhost:5173
 
-### 4. Access the Application
+## 📋 Default Users
 
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8080
-- **H2 Database Console**: http://localhost:8080/h2-console
-  - JDBC URL: `jdbc:h2:mem:busbookingdb`
-  - Username: `sa`
-  - Password: `password`
+| Username | Password | Role  |
+| -------- | -------- | ----- |
+| admin    | admin123 | ADMIN |
+| user     | user123  | USER  |
 
-## Demo Credentials
+## 🔧 Configuration
 
-The application comes with pre-loaded sample data:
+### Database Configuration
 
-### Users
+- **Host**: localhost:3306
+- **Database**: busbookingdb
+- **Username**: root
+- **Password**: Ssuren78626@@
 
-- **Admin**: `admin` / `admin123`
-- **User 1**: `john` / `password123`
-- **User 2**: `jane` / `password123`
+### Backend Configuration
 
-### Sample Buses
+- **Port**: 8080
+- **CORS**: Enabled for all origins
+- **JWT**: Enabled (temporarily disabled for testing)
 
-- New York → Boston
-- Boston → New York
-- Chicago → Detroit
-- Los Angeles → San Francisco
-- Miami → Orlando
+### Frontend Configuration
 
-## API Endpoints
+- **Port**: 5173 (Vite default)
+- **API Base URL**: http://localhost:8080
+
+## 📡 API Endpoints
 
 ### Authentication
 
-- `POST /api/auth/signup` - User registration
 - `POST /api/auth/login` - User login
+- `POST /api/auth/signup` - User registration
 
 ### Buses
 
-- `GET /api/buses` - Get all buses
-- `GET /api/buses/{id}` - Get bus by ID
+- `GET /api/buses` - List all buses
 - `GET /api/buses/search` - Search buses
-- `GET /api/buses/{id}/seats` - Get bus seats
-- `POST /api/buses` - Create new bus
+- `GET /api/buses/{id}` - Get bus details
 
 ### Bookings
 
-- `POST /api/bookings` - Create booking
 - `GET /api/bookings/user` - Get user bookings
-- `GET /api/bookings/{number}` - Get booking by number
-- `POST /api/bookings/{number}/cancel` - Cancel booking
-- `POST /api/bookings/{number}/payment` - Process payment
+- `GET /api/bookings/admin/all` - Get all bookings (admin)
+- `POST /api/bookings` - Create booking
+- `POST /api/bookings/{id}/cancel` - Cancel booking
+- `POST /api/bookings/{id}/payment` - Process payment
 
-## Project Structure
+### Admin Endpoints
 
-```
-spring-test/
-├── src/main/java/com/busbooking/
-│   ├── BusBookingApplication.java
-│   ├── config/
-│   │   ├── SecurityConfig.java
-│   │   └── DataInitializer.java
-│   ├── controller/
-│   │   ├── AuthController.java
-│   │   ├── BusController.java
-│   │   └── BookingController.java
-│   ├── dto/
-│   │   ├── LoginDto.java
-│   │   ├── UserRegistrationDto.java
-│   │   └── BookingDto.java
-│   ├── entity/
-│   │   ├── User.java
-│   │   ├── Bus.java
-│   │   ├── Seat.java
-│   │   └── Booking.java
-│   ├── repository/
-│   │   ├── UserRepository.java
-│   │   ├── BusRepository.java
-│   │   ├── SeatRepository.java
-│   │   └── BookingRepository.java
-│   ├── service/
-│   │   ├── UserService.java
-│   │   ├── BusService.java
-│   │   └── BookingService.java
-│   └── security/
-│       ├── JwtTokenProvider.java
-│       └── JwtAuthenticationFilter.java
-├── src/main/resources/
-│   └── application.properties
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   └── Navbar.jsx
-│   │   ├── context/
-│   │   │   └── AuthContext.jsx
-│   │   ├── pages/
-│   │   │   ├── Home.jsx
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   ├── BusSearch.jsx
-│   │   │   ├── BusDetails.jsx
-│   │   │   └── MyBookings.jsx
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│   ├── package.json
-│   ├── vite.config.js
-│   └── tailwind.config.js
-└── pom.xml
-```
+- `GET /api/bookings/admin/stats` - Booking statistics
+- `POST /api/bookings/admin/{id}/approve` - Approve booking
+- `POST /api/bookings/admin/{id}/reject` - Reject booking
 
-## Features in Detail
+## 🗄️ Database Schema
 
-### User Authentication
+### Users Table
 
-- Secure JWT-based authentication
-- User registration with validation
-- Password encryption with BCrypt
-- Role-based access control
+- `id` (Primary Key)
+- `username` (Unique)
+- `password` (Encrypted)
+- `email`
+- `first_name`
+- `last_name`
+- `full_name`
+- `phone`
 
-### Bus Search & Booking
+### User Roles Table
 
-- Search buses by route and date
-- Real-time seat availability
-- Interactive seat selection
-- Booking confirmation with unique numbers
+- `user_id` (Foreign Key)
+- `role` (ROLE_ADMIN, ROLE_USER)
 
-### Payment System
+### Buses Table
 
-- Simulated payment processing
-- Payment status tracking
-- Booking cancellation support
+- `id` (Primary Key)
+- `bus_number`
+- `source`
+- `destination`
+- `departure_time`
+- `arrival_time`
+- `total_seats`
+- `available_seats`
+- `price`
+- `bus_type`
+- `operator`
 
-### Database
+### Seats Table
 
-- Automatic table creation
-- Sample data initialization
-- H2 in-memory database for development
+- `id` (Primary Key)
+- `bus_id` (Foreign Key)
+- `seat_number`
+- `status` (AVAILABLE, BOOKED)
 
-## Development
+### Bookings Table
+
+- `id` (Primary Key)
+- `booking_number` (Unique)
+- `user_id` (Foreign Key)
+- `bus_id` (Foreign Key)
+- `seat_id` (Foreign Key)
+- `booking_date`
+- `total_amount`
+- `status` (CONFIRMED, CANCELLED, COMPLETED)
+- `payment_status` (PENDING, PAID, FAILED, REFUNDED)
+
+## 🛠️ Development
 
 ### Backend Development
 
-- The application uses H2 in-memory database
-- Tables are created automatically on startup
-- Sample data is loaded via `DataInitializer`
-- JWT tokens are used for authentication
+```bash
+# Run with hot reload
+mvn spring-boot:run
+
+# Run tests
+mvn test
+
+# Build JAR
+mvn clean package
+```
 
 ### Frontend Development
 
-- React with Vite for fast development
-- Tailwind CSS for styling
-- React Router for navigation
-- Context API for state management
+```bash
+cd frontend
 
-## Deployment
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Run tests
+npm test
+```
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+1. **Port 8080 already in use**:
+
+   ```bash
+   lsof -ti:8080 | xargs kill -9
+   ```
+
+2. **MySQL connection failed**:
+
+   ```bash
+   # Check if Docker container is running
+   docker ps
+
+   # Restart container if needed
+   docker restart mysql-busbooking
+   ```
+
+3. **Frontend can't connect to backend**:
+
+   - Ensure backend is running on port 8080
+   - Check CORS configuration
+   - Verify API base URL in frontend config
+
+4. **Authentication issues**:
+   - Check JWT token expiration
+   - Verify user credentials
+   - Check Spring Security configuration
+
+### Logs
+
+- **Backend logs**: `backend.log` (created by setup script)
+- **Docker logs**: `docker logs mysql-busbooking`
+- **Frontend logs**: Check browser console
+
+## 🧪 Testing
+
+### Backend API Testing
+
+```bash
+# Test buses endpoint
+curl http://localhost:8080/api/buses
+
+# Test login
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"admin123"}'
+
+# Test bookings (with token)
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  http://localhost:8080/api/bookings/admin/all
+```
+
+### Frontend Testing
+
+1. Open browser to http://localhost:5173
+2. Login with admin credentials
+3. Test booking functionality
+4. Check admin dashboard
+
+## 🚀 Deployment
 
 ### Backend Deployment
 
-1. Build the JAR file: `mvn clean package`
-2. Run the JAR: `java -jar target/bus-booking-system-0.0.1-SNAPSHOT.jar`
+```bash
+# Build JAR
+mvn clean package
+
+# Run JAR
+java -jar target/bus-booking-system-0.0.1-SNAPSHOT.jar
+```
 
 ### Frontend Deployment
 
-1. Build the production files: `npm run build`
-2. Deploy the `dist` folder to your web server
+```bash
+cd frontend
 
-## Contributing
+# Build for production
+npm run build
+
+# Serve static files
+npm install -g serve
+serve -s dist -l 3000
+```
+
+## 📝 Features
+
+### User Features
+
+- ✅ User registration and login
+- ✅ Browse available buses
+- ✅ Search buses by route and date
+- ✅ Book seats
+- ✅ View booking history
+- ✅ Cancel bookings
+- ✅ Payment processing
+
+### Admin Features
+
+- ✅ View all bookings
+- ✅ Approve/reject bookings
+- ✅ View booking statistics
+- ✅ Manage bus routes
+- ✅ Monitor system status
+
+### Technical Features
+
+- ✅ JWT Authentication
+- ✅ Role-based access control
+- ✅ CORS configuration
+- ✅ Database persistence
+- ✅ RESTful API
+- ✅ Responsive UI
+- ✅ Real-time updates
+
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Test thoroughly
+4. Add tests if applicable
 5. Submit a pull request
 
-## License
+## 📄 License
 
-This project is for educational purposes. Feel free to use and modify as needed.
+This project is licensed under the MIT License.
 
-## Support
+## 🆘 Support
 
-For any issues or questions, please create an issue in the repository.
+If you encounter any issues:
+
+1. Check the troubleshooting section
+2. Review the logs
+3. Ensure all prerequisites are installed
+4. Verify Docker is running
+5. Check port availability
+
+For additional help, please open an issue on GitHub.
